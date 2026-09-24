@@ -1,0 +1,37 @@
+{
+  "name": "tizenbrew-remote-lab",
+  "version": "0.1.0",
+  "description": "Remote key explorer and D-pad focus playground for TizenBrew.",
+  "license": "MIT",
+  "packageType": "app",
+  "appName": "Remote Lab",
+  "appPath": "app/index.html",
+  "keys": [
+    "ColorF0Red",
+    "ColorF1Green",
+    "ColorF2Yellow",
+    "ColorF3Blue",
+    "MediaPlayPause",
+    "MediaPlay",
+    "MediaPause",
+    "MediaStop",
+    "MediaRewind",
+    "MediaFastForward",
+    "ChannelUp",
+    "ChannelDown",
+    "Info",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ],
+  "files": [
+    "app"
+  ]
+}

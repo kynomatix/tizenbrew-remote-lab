@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Remote Lab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="stage">
+    <header class="bar">
+      <h1>Remote Lab</h1>
+      <span class="clock" id="clock"></span>
+    </header>
+
+    <section class="grid" id="grid" aria-label="Focus grid"></section>
+
+    <aside class="panel">
+      <div class="last">
+        <span class="label">Last key</span>
+        <span class="last-name" id="last-name">Press any button</span>
+        <span class="last-code" id="last-code">Arrows move · OK selects</span>
+      </div>
+      <ol class="log" id="log"></ol>
+      <dl class="env" id="env"></dl>
+    </aside>
+
+    <footer class="hint">
+      Colour keys jump to their tile · Back twice to leave · Home always works
+    </footer>
+  </main>
+  <script src="main.js"></script>
+</body>
+</html>

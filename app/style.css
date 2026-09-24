@@ -1,0 +1,188 @@
+/* Sized in viewport units so the layout holds at 1280x720 and 1920x1080,
+   whichever the TV reports. */
+
+:root {
+  --bg: #0b0d12;
+  --panel: #151922;
+  --tile: #1c212c;
+  --line: #232835;
+  --text: #e8ebf1;
+  --muted: #8a93a6;
+  --accent: #6c8cff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+.stage {
+  height: 100vh;
+  /* Keep everything inside the TV safe area, clear of any overscan. */
+  padding: 5vh 5vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "bar  bar"
+    "grid panel"
+    "hint hint";
+  grid-gap: 3vh 4vw;
+}
+
+.bar {
+  grid-area: bar;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+h1 {
+  font-size: 5vh;
+  font-weight: 600;
+}
+
+.clock {
+  font-size: 4vh;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.grid {
+  grid-area: grid;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-gap: 2.5vh;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2vh;
+  border: 0.5vh solid transparent;
+  border-radius: 2vh;
+  background: var(--tile);
+  color: var(--muted);
+  font-size: 2.8vh;
+  /* Only transform is animated: it stays on the compositor, which matters
+     on a TV's slow chip. */
+  transition: transform 120ms ease-out;
+}
+
+.swatch {
+  width: 4vh;
+  height: 4vh;
+  border-radius: 50%;
+}
+
+.tile.focused {
+  border-color: var(--accent);
+  color: var(--text);
+  transform: scale(1.06);
+}
+
+.tile.pulse {
+  animation: pulse 260ms ease-out;
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(0.96);
+  }
+}
+
+.panel {
+  grid-area: panel;
+  display: flex;
+  flex-direction: column;
+  /* Lets the log shrink to fit rather than pushing past the stage. */
+  min-height: 0;
+  padding: 3vh;
+  border-radius: 2vh;
+  background: var(--panel);
+}
+
+.last {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3vh;
+}
+
+.label {
+  font-size: 2.2vh;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.last-name {
+  font-size: 6vh;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.last-code {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 2.6vh;
+  color: var(--muted);
+}
+
+.log {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  list-style: none;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 2.4vh;
+}
+
+.log li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6vh 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.log li span:last-child {
+  color: var(--muted);
+}
+
+.log li.unknown span:first-child {
+  color: var(--accent);
+}
+
+.env {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 0.4vh 2vw;
+  margin-top: 2vh;
+  font-size: 2vh;
+}
+
+.env dt {
+  color: var(--muted);
+}
+
+.env dd {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hint {
+  grid-area: hint;
+  font-size: 2.4vh;
+  color: var(--muted);
+}
