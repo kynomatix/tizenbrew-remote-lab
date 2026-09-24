@@ -150,18 +150,61 @@
     }
   }
 
+  // Newest first: each feature paired with the Chromium version that shipped
+  // it. The user agent can't be trusted for this. Samsung's omits "Chrome/",
+  // and TizenBrew can replace it outright, so check what the engine can do.
+  const ENGINE_RUNGS = [
+    [128, () => typeof Promise.try === 'function'],
+    [122, () => typeof Set.prototype.union === 'function'],
+    [120, () => typeof URL.canParse === 'function'],
+    [117, () => typeof Object.groupBy === 'function'],
+    [110, () => typeof Array.prototype.toSorted === 'function'],
+    [105, () => CSS.supports('selector(:has(a))')],
+    [98, () => typeof structuredClone === 'function'],
+    [92, () => typeof Array.prototype.at === 'function'],
+    [85, () => typeof String.prototype.replaceAll === 'function'],
+    [80, () => new Function('return ({})?.a === undefined')()],
+    [73, () => typeof Object.fromEntries === 'function'],
+    [69, () => typeof Array.prototype.flat === 'function']
+  ];
+
+  function detectEngine() {
+    for (let i = 0; i < ENGINE_RUNGS.length; i++) {
+      let supported = false;
+      try {
+        supported = ENGINE_RUNGS[i][1]();
+      } catch (_) {
+        // Missing syntax or API: this rung isn't supported.
+      }
+      if (supported) {
+        const version = ENGINE_RUNGS[i][0];
+        return i === 0 ? `Chromium ${version}+` : `Chromium ${version}–${ENGINE_RUNGS[i - 1][0] - 1}`;
+      }
+    }
+    return 'older than Chromium 69';
+  }
+
+  function versionFromUserAgent(ua) {
+    // Desktop style "Chrome/120", or Samsung TV style "120.0.6099.5/9.0 TV Safari".
+    const match = ua.match(/Chrome\/(\d+)/) || ua.match(/\b(\d{2,3})(?:\.\d+){3,4}\/[\d.]+ TV Safari/);
+    return match ? match[1] : 'none given';
+  }
+
   function describeEnvironment() {
-    const chromium = navigator.userAgent.match(/Chrome\/(\d+)/);
     const rows = [
       ['Viewport', `${window.innerWidth} × ${window.innerHeight} @ ${window.devicePixelRatio}x`],
-      ['Chromium', chromium ? chromium[1] : 'unknown'],
-      ['Tizen API', window.tizen ? 'available' : 'not in this context']
+      ['Engine', detectEngine()],
+      ['UA version', versionFromUserAgent(navigator.userAgent)],
+      ['Tizen API', window.tizen ? 'available' : 'not available here'],
+      ['User agent', navigator.userAgent]
     ];
     rows.forEach(([label, value]) => {
       const dt = document.createElement('dt');
       const dd = document.createElement('dd');
       dt.textContent = label;
       dd.textContent = value;
+      // The full agent string is long, and its useful part is at the end.
+      if (label === 'User agent') dd.className = 'wrap';
       env.appendChild(dt);
       env.appendChild(dd);
     });
